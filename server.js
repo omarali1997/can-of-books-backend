@@ -1,7 +1,10 @@
-'use strict';
 
-require('dotenv').config();
+'use strict';
+const dotenv = require('dotenv')
+dotenv.config();
+
 const express = require('express');
+
 const cors = require('cors');
 
 const mongoose = require('mongoose'); //import
@@ -59,6 +62,14 @@ async function seedData() {
 // seedData();
 
 
+app.get('/test', (request, response) => {
+
+  response.send('test request received')
+})
+
+
+app.get('/books', getbookHandler);
+
 function getbookHandler(req, res) {
   bookModel.find({}, (err, result) => {
     if(err) {
@@ -66,7 +77,8 @@ function getbookHandler(req, res) {
     }
     else
     {
-      res.send(result);
+      console.log(result);
+      res.json(result);
     }
   })
 }
@@ -76,12 +88,7 @@ function getbookHandler(req, res) {
 
 
 
-app.get('/books', getbookHandler);
 
-app.get('/test', (request, response) => {
 
-  response.send('test request received')
-
-})
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
