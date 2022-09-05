@@ -1,4 +1,3 @@
-
 'use strict';
 const dotenv = require('dotenv')
 dotenv.config();
@@ -12,12 +11,25 @@ const mongoose = require('mongoose'); //import
 
 const app = express();
 app.use(cors());
+// ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
+
+app.use(express.json());
+
+// ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
+
+// ///////////////////////////////////////////////PORT//////////////////////////////////////////////////
 
 const PORT = process.env.PORT || 3001;
 
+// ///////////////////////////////////////////////PORT//////////////////////////////////////////////////
 
+// ///////////////////////////////////////////////mongooseDB//////////////////////////////////////////////////
 
-mongoose.connect('mongodb://localhost:27017/Book', { useNewUrlParser: true, useUnifiedTopology: true }); // 1 - connect mongoose with DB
+// connect mongoose with DB
+
+mongoose.connect('mongodb://omar:1234@ac-gz7wr2i-shard-00-00.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-01.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-02.jeyohs9.mongodb.net:27017/?ssl=true&replicaSet=atlas-z04wln-shard-0&authSource=admin&retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true });
+
+// connect mongoose with DB
 
 
 const BookSchema = new mongoose.Schema({
@@ -28,7 +40,26 @@ const BookSchema = new mongoose.Schema({
 });
 
 const bookModel = mongoose.model('book', BookSchema);
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+// ///////////////////////////////////////////////rautes//////////////////////////////////////////////////
+
+
+app.get('/test', (request, response) => {
+
+  response.send('test request received');
+});
+
+app.get('/books', getbookHandler);
+app.post('/books', bookHandler);
+app.delete('/books/:id', deleteBooksHandler);
+
+
+
+// /////////////////////////////////////////////////////////////////////////////////////////////////
+
+// /////////////////////////////////////////The Function////////////////////////////////////////////////////////
 
 
 
@@ -38,57 +69,81 @@ async function seedData() {
     title: "firstBook",
     description: "firstBook description",
     status: "firstBook status"
-  })
+  });
 
   const secondtBook = new bookModel({
     title: "secondtBook",
     description: "secondtBook description",
     status: "secondtBook status"
-  })
+  });
 
   const theardtBook = new bookModel({
     title: "theardtBook",
     description: "theardtBook description",
     status: "theardtBook status"
-  })
+  });
 
 
   await firstBook.save();
   await secondtBook.save();
   await theardtBook.save();
+  console.log('done');
 
 }
 
 // seedData();
 
 
-app.get('/test', (request, response) => {
-
-  response.send('test request received')
-})
-
-
-app.get('/books', getbookHandler);
-
 function getbookHandler(req, res) {
   bookModel.find({}, (err, result) => {
-    if(err) {
+    if (err) {
       console.log(err);
     }
-    else
-    {
-      console.log(result);
+    else {
       res.json(result);
     }
-  })
+  });
+}
+
+
+async function bookHandler(req, res) {
+  // console.log(req.body);
+  const { BookTitle, BookDescription, BookStatus } = req.body;
+  await bookModel.create({
+    title: BookTitle,
+    description: BookDescription,
+    status: BookStatus
+  });
+
+  bookModel.find({}, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(result);
+    }
+  });
 }
 
 
 
+function deleteBooksHandler(req, res) {
+  const bookId = req.params.id;
+  bookModel.deleteOne({ _id: bookId }, (err, result) => {
 
+    bookModel.find({}, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        res.json(result);
+      }
+    });
+  });
+}
 
+// /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
+// /////////////////////////////////////////////////////////////////////////////////////////////////
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
+// /////////////////////////////////////////////////////////////////////////////////////////////////
