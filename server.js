@@ -13,13 +13,13 @@ const app = express();
 app.use(cors());
 // ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
 
-app.use(express.send());
+app.use(express.json());
 
 // ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
 
 // ///////////////////////////////////////////////PORT//////////////////////////////////////////////////
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 // ///////////////////////////////////////////////PORT//////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ function getbookHandler(req, res) {
       console.log(err);
     }
     else {
-      res.send(result);
+      res.json(result);
     }
   });
 }
@@ -121,7 +121,7 @@ async function bookHandler(req, res) {
       console.log(err);
     }
     else {
-      res.send(result);
+      res.json(result);
     }
   });
 }
@@ -137,7 +137,7 @@ function deleteBooksHandler(req, res) {
         console.log(err);
       }
       else {
-        res.send(result);
+        res.json(result);
       }
     });
   });
@@ -161,7 +161,7 @@ function dupdateBooksHandler(req, res) {
           console.log(err);
         }
         else {
-          res.send(result);
+          res.json(result);
         }
       });
 
