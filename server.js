@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 // ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
 
-app.use(express.json());
+app.use(express.send());
 
 // ///////////////////////////////////////////////access req.body//////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ function getbookHandler(req, res) {
       console.log(err);
     }
     else {
-      res.json(result);
+      res.send(result);
     }
   });
 }
@@ -121,7 +121,7 @@ async function bookHandler(req, res) {
       console.log(err);
     }
     else {
-      res.json(result);
+      res.send(result);
     }
   });
 }
@@ -137,7 +137,7 @@ function deleteBooksHandler(req, res) {
         console.log(err);
       }
       else {
-        res.json(result);
+        res.send(result);
       }
     });
   });
@@ -161,7 +161,7 @@ function dupdateBooksHandler(req, res) {
           console.log(err);
         }
         else {
-          res.json(result);
+          res.send(result);
         }
       });
 
