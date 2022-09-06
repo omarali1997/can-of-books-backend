@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 3001;
 
 // connect mongoose with DB
 
-mongoose.connect('mongodb://omar:1234@ac-gz7wr2i-shard-00-00.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-01.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-02.jeyohs9.mongodb.net:27017/?ssl=true&replicaSet=atlas-z04wln-shard-0&authSource=admin&retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://omar:1234@ac-gz7wr2i-shard-00-00.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-01.jeyohs9.mongodb.net:27017,ac-gz7wr2i-shard-00-02.jeyohs9.mongodb.net:27017/?ssl=true&replicaSet=atlas-z04wln-shard-0&authSource=admin&retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // connect mongoose with DB
 
@@ -54,6 +54,7 @@ app.get('/test', (request, response) => {
 app.get('/books', getbookHandler);
 app.post('/books', bookHandler);
 app.delete('/books/:id', deleteBooksHandler);
+app.put('/books/:id', dupdateBooksHandler);
 
 
 
@@ -139,6 +140,32 @@ function deleteBooksHandler(req, res) {
         res.json(result);
       }
     });
+  });
+}
+
+function dupdateBooksHandler(req, res) {
+  console.log(req.body);
+  const id = req.params.id;
+  console.log(id);
+
+  const { title, description, status  } = req.body;
+  bookModel.findByIdAndUpdate(id,{ title, description, status },(err,result)=>{
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      bookModel.find({}, (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          res.json(result);
+        }
+      });
+
+    }
   });
 }
 
